@@ -1,5 +1,8 @@
 const express=require("express");
 const app=express();
+app.use("/",(req,res)=>{
+    res.send("hello node js");
+})
 app.use("/test",(req,res)=>{
     res.send("hello wlcm to routing .");
 });
