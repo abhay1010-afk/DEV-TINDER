@@ -46,6 +46,31 @@ app.get("/feed",async (req,res)=>{
         res.status(501).send("Error in fetching the data");
     }
 })
+app.delete("/user",async (req,res)=>{
+    const userId=req.body.userId;
+    try{
+        const user=await User.findByIdAndDelete({_id:userId});
+        res.send("User deleted successfully");
+    }catch(err){
+          res.status(501).send("Error in deleting the user");
+    }
+
+})
+app.patch("/userUpdate",async (req,res)=>{
+    const userId=req.body.userId;
+    const data=req.body;
+    console.log(data);
+    try{
+       const user= await User.findByIdAndUpdate({_id:userId},data,{
+            returnDocument:"before"
+        });
+        console.log(user);
+       res.send("Data Updated SuccessFully");
+    }
+    catch(err){
+          res.status(501).send("Error in Updating the User");
+    }
+})
 
 connectDB().then(()=>{
     console.log("connections established succesfully");
