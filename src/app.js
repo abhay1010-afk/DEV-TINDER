@@ -1,17 +1,60 @@
 const express=require("express");
+const connectDB=require("./config/Database");
 const app=express();
-app.use("/",(req,res)=>{
-    res.send("hello node js");
+const User=require("./Models/User");
+app.use(express.json());
+app.post("/signup",async(req,res)=>{
+    // const user=new User({
+    //     firstName:"Sanu",
+    //     LastName:"Tomar",
+    //     password:"abhay1010@",
+    //     Age:21,
+    //     PhNumber:626110903,
+
+     const user=new User(req.body);   
+    
+    
+    try{
+    await user.save();
+    console.log(user);
+    res.send("Request Send Succesfully");
+    }catch{(err)=>{
+res.status(400).send("There is error sending the request"+err.message);
+    }}
 })
-app.use("/test",(req,res)=>{
-    res.send("hello wlcm to routing .");
-});
-app.use("/hello",(req,res)=>{
-    res.send("RCB won the ipl 2025");
-});
-app.use((req,res)=>{
-    res.send("hello abhay welcome to backend ");
-});
-app.listen(7777,()=>{
+app.get("/data",async (req,res)=>{
+   const userData=req.body.Age;
+   try{
+    const user= await User.find({Age:userData});
+    console.log(user);
+    res.send(user);
+   }catch(err){
+    console.log("error");
+    res.status(404).send("SOMETHING WENT WRONG");
+   }
+
+
+})
+app.get("/feed",async (req,res)=>{
+    const getdata=req.body.LastName;
+    try{
+        const alldata=await User.findOne({LastName:getdata});
+        console.log(alldata);
+        res.send(alldata);
+
+    }catch{
+        res.status(501).send("Error in fetching the data");
+    }
+})
+
+connectDB().then(()=>{
+    console.log("connections established succesfully");
+    app.listen(7777,()=>{
     console.log("server is running on port number 7777");
 })
+}).catch((err)=>{
+    console.error("error in esatblishing connections");
+})
+
+
+ 

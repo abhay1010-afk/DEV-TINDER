@@ -4,8 +4,8 @@
   "description": "tinder for developers",
   "main": "index.js",
   "scripts": {
-    "start":"nodemon src/app.js",
-    "dev":"node src/app.js"
+    "start": "nodemon src/app.js",
+    "dev": "node src/app.js"
   },
   "keywords": [
     "nodejs",
@@ -16,6 +16,7 @@
   "author": "Abhay Tomar",
   "license": "ISC",
   "dependencies": {
-    "express": "^5.1.0"
+    "express": "^5.1.0",
+    "mongoose": "^9.0.1"
   }
 }
