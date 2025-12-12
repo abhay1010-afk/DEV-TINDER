@@ -1,25 +1,27 @@
-const adminauth=(req,res)=>{
-    const token="abc";
-    const adminauthorised=token==="bc";
-    if(!adminauthorised){
-       res.status(401).send("unauthorised access");
+const jwt=require('jsonwebtoken');
+const User = require('../Models/User');
+const userauth=async (req,res,next)=>{
+    try{
+    const {token}=req.cookies;
+    if(!token){
+        throw new Error("Invalid token");
     }
-    else{
-        res.send("hello admin data");
+    const decodeMessage=await jwt.verify(token,"Abhay1010@");
+    const {_id}=decodeMessage;
+    const user=await User.findById(_id);
+    if(!user){
+        throw new Error("User Does not exist");
     }
-}
-const userauth=(req,res,next)=>{
-    const token="xyz";
-    const isuserauthorised=token==="xyz";
-    if(!isuserauthorised){
-        res.status(404).send("Invalid User Access");
+    req.user=user;
+    next();
+    }catch(err){
+        res.status(404).send("ERROR:"+err.message);
     }
-    else{
-        // res.send("USER IS ACCESSING THE FILES");
-        next();
-    }
+
+
+   
 }
 module.exports={
-    adminauth,
+  
     userauth
 }

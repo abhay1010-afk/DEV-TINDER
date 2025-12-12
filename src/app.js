@@ -4,7 +4,11 @@ const bcrypt=require("bcrypt");
 const app=express();
 const User=require("./Models/User");
 const {validatesignupdata}=require("./utils/validate");
+const cookieParser = require("cookie-parser");
+const jwt=require("jsonwebtoken");
+const {userauth}=require("./Middlewares/auth");
 app.use(express.json());
+app.use(cookieParser());
 app.post("/signup",async(req,res)=>{
     try{
     validatesignupdata(req);
@@ -81,9 +85,7 @@ app.patch("/userUpdate/:userId",async (req,res)=>{
         if(!isupdateallowed){
             throw new Error("data is not allowed to change");
         }
-          if (!data.PhNumber) {
-            throw new Error("PhNumber is required when updating profile");
-        }
+       
        const user= await User.findByIdAndUpdate({_id:userId},data,{
             returnDocument:"before",
             runValidators:true,
@@ -94,6 +96,35 @@ app.patch("/userUpdate/:userId",async (req,res)=>{
     catch(err){
           res.status(501).send("Error in Updating the User");
     }
+})
+app.post("/login",async (req,res)=>{
+    try{
+        const {email,password}=req.body;
+      const user= await User.findOne({email:email});
+      if(!user){
+        throw new Error("INVAILD CREDENTIALS");
+      }
+      const checkLogin=await bcrypt.compare(password,user.password);
+      if(checkLogin){
+       const token=await jwt.sign({_id:user._id},"Abhay1010@",{
+        expiresIn:"1d",
+       });
+       console.log(token);
+       res.cookie("token",token,{
+        expires:new Date(Date.now()+8*360000)
+       });
+        res.send("Login Successfull");
+      }else{
+        throw new Error("LOGIN IS UNSUCCESSFULL");
+      }
+
+    }catch(err){
+        res.status(401).send("ERROR :"+err.message)
+    }
+})
+app.get("/Profile",userauth,async (req,res)=>{
+     const user=req.user;
+         res.send(user);
 })
 
 connectDB().then(()=>{
