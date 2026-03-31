@@ -11,6 +11,14 @@ const validatesignupdata=(req)=>{
         throw new Error("Email is invalid"+email);
     }
 }
+const validateEditData=(req)=>{
+    const allowedEditData=["Age","firstName","About","Skills","Gender"];
+   const isupdateallowed= Object.keys(req).every((k)=>{
+         allowedEditData.includes(k);
+    })
+    return isupdateallowed;
+}
 module.exports={
     validatesignupdata,
+    validateEditData
 };
