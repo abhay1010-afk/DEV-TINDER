@@ -9,8 +9,13 @@ const authRouter = require("./routes/auth");
 const ProfileRouter = require("./routes/profile");
 const requestRouter=require("./routes/request");
 const {userRoutes}=require("./routes/user");
+const cors=require("cors");
 
 
+app.use(cors({
+    origin: "http://localhost:5173",
+    credentials:true
+}))
 app.use(express.json());
 app.use(cookieParser());
 app.use("/", authRouter);
@@ -57,7 +62,7 @@ app.patch("/userUpdate/:userId", async (req, res) => {
     const data = req.body;
     console.log(data);
     try {
-        const allowed_data = ["About", "skills", "PhNumber", "Gender"];
+        const allowed_data = ["About", "skills", "PhNumber", "Gender","LastName","ImgUrl"];
         const isupdateallowed = Object.keys(data).every((k) => {
             return allowed_data.includes(k);
 

@@ -65,6 +65,10 @@ const UserSchema=new mongoose.Schema({
     skills:{
         type:[String],
         default:["javascript"]
+    },
+    ImgUrl:{
+        type:String,
+
     }
 
 

@@ -11,7 +11,7 @@ authRouter.post("/signup",async(req,res)=>{
     validatesignupdata(req);
  
   
-    const {firstName,LastName,email,password,Age,PhNumber}=req.body;
+    const {firstName,LastName,email,password,Age,PhNumber,ImgUrl}=req.body;
     console.log(password);
      
      const hashedPassword=await bcrypt.hash(password,10);
@@ -22,7 +22,8 @@ authRouter.post("/signup",async(req,res)=>{
         email:email,
         password:hashedPassword,
         Age:Age,
-        PhNumber:PhNumber
+        PhNumber:PhNumber,
+        ImgUrl:ImgUrl
      });  
     
     
@@ -48,7 +49,7 @@ authRouter.post("/login",async (req,res)=>{
        res.cookie("token",token,{
         expires:new Date(Date.now()+8*360000)
        });
-        res.send("Login Successfull");
+        res.send(user);
       }else{
         throw new Error("LOGIN IS UNSUCCESSFULL");
       }

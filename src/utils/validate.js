@@ -12,7 +12,7 @@ const validatesignupdata=(req)=>{
     }
 }
 const validateEditData=(req)=>{
-    const allowedEditData=["Age","firstName","About","Skills","Gender"];
+    const allowedEditData=["Age","firstName","About","Skills","Gender","LastName"];
    const isupdateallowed= Object.keys(req).every((k)=>{
          allowedEditData.includes(k);
     })
