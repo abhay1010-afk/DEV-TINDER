@@ -48,12 +48,13 @@ const UserSchema=new mongoose.Schema({
     },
     Age:{
         type:Number,
-        required:true,
+        required:false,
 
     },
     PhNumber:{
-        type:Number,
-        default:280830802,
+        type:String,
+        
+        
         
         
     },

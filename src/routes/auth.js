@@ -11,7 +11,7 @@ authRouter.post("/signup",async(req,res)=>{
     validatesignupdata(req);
  
   
-    const {firstName,LastName,email,password,Age,PhNumber,ImgUrl}=req.body;
+    const {firstName,LastName,email,password}=req.body;
     console.log(password);
      
      const hashedPassword=await bcrypt.hash(password,10);
@@ -21,16 +21,21 @@ authRouter.post("/signup",async(req,res)=>{
         LastName:LastName,
         email:email,
         password:hashedPassword,
-        Age:Age,
-        PhNumber:PhNumber,
-        ImgUrl:ImgUrl
+    
      });  
     
     
     
-    await user.save();
-    console.log(user);
-    res.send("Request Send Succesfully");
+    const newUser=await user.save();
+    
+           const token=await newUser.getJWT();
+       console.log(token);
+       res.cookie("token",token,{
+        expires:new Date(Date.now()+8*360000)
+       });
+    
+    // console.log(user);
+    res.json({message:"Request Send Succesfully",data:newUser});
     }catch(err){
 res.status(400).send("There is error sending the request"+err.message);
     }
